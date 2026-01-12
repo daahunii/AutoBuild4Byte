@@ -1,0 +1,6 @@
+docker
+lxml
+javalang
+GitPython
+Jinja2
+openai

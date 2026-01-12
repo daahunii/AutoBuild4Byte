@@ -1,0 +1,57 @@
+import org.gradle.api.artifacts.repositories.MavenArtifactRepository
+
+allprojects {
+    buildscript {
+        repositories {
+            mavenCentral()
+            maven { url "https://plugins.gradle.org/m2/" }
+            maven { url "https://repo.maven.apache.org/maven2" }
+            maven { url "https://repo.spring.io/plugins-snapshot" }
+            
+            // Remove broken/auth-restricted repositories
+            // Remove broken/auth-restricted repositories
+            removeIf { repo ->
+                repo instanceof MavenArtifactRepository && (
+                    (repo.url.toString().contains("repo.spring.io") && !repo.url.toString().contains("plugins-snapshot")) ||
+                    repo.url.toString().contains("http://")
+                )
+            }
+            
+            // Intercept dynamic addition of repositories (e.g. by plugins)
+            whenObjectAdded { repo ->
+                if (repo instanceof MavenArtifactRepository) {
+                    if (repo.url.toString().contains("repo.spring.io") && !repo.url.toString().contains("plugins-snapshot")) {
+                        println "Neutralizing broken buildscript repo: ${repo.url}"
+                        repo.setUrl("https://repo.maven.apache.org/maven2")
+                    }
+                }
+            }
+        }
+    }
+    
+    repositories {
+        mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "https://repo.maven.apache.org/maven2" }
+        maven { url "https://repo.spring.io/plugins-snapshot" }
+        
+        // Remove broken/auth-restricted repositories
+        // Remove broken/auth-restricted repositories
+        removeIf { repo ->
+            repo instanceof MavenArtifactRepository && (
+                (repo.url.toString().contains("repo.spring.io") && !repo.url.toString().contains("plugins-snapshot")) ||
+                repo.url.toString().contains("http://")
+            )
+        }
+        
+        // Intercept dynamic addition of repositories
+        whenObjectAdded { repo ->
+            if (repo instanceof MavenArtifactRepository) {
+                if (repo.url.toString().contains("repo.spring.io") && !repo.url.toString().contains("plugins-snapshot")) {
+                    println "Neutralizing broken repo: ${repo.url}"
+                    repo.setUrl("https://repo.maven.apache.org/maven2")
+                }
+            }
+        }
+    }
+}

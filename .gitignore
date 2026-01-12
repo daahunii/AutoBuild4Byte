@@ -1,0 +1,10 @@
+llm_config.json
+__pycache__/
+*.pyc
+workspace/
+output/
+.DS_Store
+workspace_test/
+plan.md
+result.md
+buggy_source_temp/

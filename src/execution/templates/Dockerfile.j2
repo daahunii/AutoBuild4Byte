@@ -1,0 +1,49 @@
+FROM ubuntu:20.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install basics
+RUN apt-get update && apt-get install -y \
+  openjdk-{{ jdk_version }}-jdk \
+  wget \
+  curl \
+  unzip \
+  git \
+  && rm -rf /var/lib/apt/lists/*
+
+# Dynamically set JAVA_HOME based on architecture (amd64 or arm64)
+RUN arch="$(dpkg --print-architecture)" && \
+  ln -s /usr/lib/jvm/java-{{ jdk_version }}-openjdk-$arch /usr/lib/jvm/java-home
+
+ENV JAVA_HOME=/usr/lib/jvm/java-home
+ENV PATH=$JAVA_HOME/bin:$PATH
+
+# Install Maven
+{% if build_tool == 'maven' %}
+ENV MAVEN_VERSION={{ build_tool_version }}
+RUN mkdir -p /usr/share/maven /usr/share/maven/ref \
+  && curl -fsSL -o /tmp/apache-maven.tar.gz https://archive.apache.org/dist/maven/maven-3/{{ build_tool_version }}/binaries/apache-maven-{{ build_tool_version }}-bin.tar.gz \
+  && tar -xzf /tmp/apache-maven.tar.gz -C /usr/share/maven --strip-components=1 \
+  && rm -f /tmp/apache-maven.tar.gz \
+  && ln -s /usr/share/maven/bin/mvn /usr/bin/mvn
+
+ENV MAVEN_HOME /usr/share/maven
+ENV MAVEN_CONFIG /root/.m2
+{% endif %}
+
+# Install Gradle
+{% if build_tool == 'gradle' %}
+ENV GRADLE_VERSION={{ build_tool_version }}
+RUN wget -q https://services.gradle.org/distributions/gradle-{{ build_tool_version }}-bin.zip \
+  && unzip gradle-{{ build_tool_version }}-bin.zip -d /opt \
+  && rm gradle-{{ build_tool_version }}-bin.zip \
+  && ln -s /opt/gradle-{{ build_tool_version }} /opt/gradle
+
+ENV GRADLE_HOME /opt/gradle
+ENV PATH $PATH:$GRADLE_HOME/bin
+{% endif %}
+
+# Set working directory
+WORKDIR /app
+
+# The source code will be mounted at /app
