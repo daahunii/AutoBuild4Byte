@@ -1,4 +1,4 @@
-# AutoBuild4Byte 구현 결과 보고서
+# AutoBuild4Byte
 
 우리는 CI 로그 없이 레거시 자바 프로젝트로부터 바이트코드를 복원하는 자동 빌드 에이전트 **AutoBuild4Byte**를 성공적으로 구현했습니다.
 
