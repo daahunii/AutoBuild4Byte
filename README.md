@@ -1,6 +1,6 @@
 # AutoBuild4Byte
 
-CI 로그 없이 레거시 자바 프로젝트로부터 바이트코드를 복원하는 자동 빌드 에이전트 **AutoBuild4Byte**를 성공적으로 구현.
+CI 로그 없이 레거시 자바 프로젝트로부터 바이트코드를 복원하는 자동 빌드 에이전트
 
 ## 1. 시스템 구성 요소
 
@@ -134,7 +134,7 @@ python3 src/main.py \
 *   **범용 구성 (Generic Configuration)**: `llm_config.json` 설정 파일 하나로 OpenAI, Google Gemini, 혹은 호환되는 모든 로컬 LLM을 손쉽게 교체할 수 있습니다.
 *   **비용 효율성 최적화**: 빌드가 성공하면 LLM을 전혀 호출하지 않아 API 비용을 0원으로 유지할 수 있습니다.
 
-### E. 진화된 기능 (Advanced Features - 2026 Update)
+### E. 진화된 기능
 
 1.  **컨텍스트 인식 (Context Awareness)**
     - 단순 로그 뿐만 아니라 **파일 트리(Project Structure)** 정보를 LLM에 제공합니다.
